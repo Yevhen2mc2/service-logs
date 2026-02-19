@@ -11,8 +11,12 @@ export interface ServiceLog {
   endDate: string;
   type: ServiceType;
   serviceDescription: string;
+  draft: boolean;
   createdAt: string;
   updatedAt: string;
 }
 
-export type DraftFormData = Omit<ServiceLog, 'id' | 'createdAt' | 'updatedAt'>;
+export type DraftFormData = Omit<
+  ServiceLog,
+  'id' | 'createdAt' | 'updatedAt' | 'draft'
+>;

@@ -11,18 +11,28 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { autoSaveReducer } from '../features/drafts/auto-save-slice.ts';
+import { logsReducer } from '../features/logs/logs-slice.ts';
 
-const persistConfig = {
+const autoSavePersistConfig = {
   key: 'root',
   version: 1,
   storage,
   whitelist: ['autoSave'],
 };
 
-const persistedAutoSaveReducer = persistReducer(persistConfig, autoSaveReducer);
+const logsPersistConfig = { key: 'logs', version: 1, storage };
+
+const persistedAutoSaveReducer = persistReducer(
+  autoSavePersistConfig,
+  autoSaveReducer,
+);
+const persistedLogsReducer = persistReducer(logsPersistConfig, logsReducer);
 
 export const store = configureStore({
-  reducer: { autoSave: persistedAutoSaveReducer },
+  reducer: {
+    autoSave: persistedAutoSaveReducer,
+    logs: persistedLogsReducer,
+  },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {

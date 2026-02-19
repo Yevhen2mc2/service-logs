@@ -28,6 +28,7 @@ export const EditLogDialog = ({ log, open, onClose, onSave }: Props) => {
             onSave(id, data, true);
           }}
           onClear={onClose}
+          onClose={onClose}
         />
       </DialogContent>
     </Dialog>

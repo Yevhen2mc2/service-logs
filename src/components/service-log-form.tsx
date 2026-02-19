@@ -31,6 +31,7 @@ interface Props {
   onSubmit: (data: DraftFormData) => void;
   onClear: () => void;
   onAutoSave?: (data: Partial<DraftFormData>) => void;
+  onClose?: () => void;
 }
 
 export const ServiceLogForm = ({
@@ -40,6 +41,7 @@ export const ServiceLogForm = ({
   onSubmit,
   onClear,
   onAutoSave,
+  onClose,
 }: Props) => {
   const today = dayjs().format('YYYY-MM-DD');
 
@@ -301,15 +303,24 @@ export const ServiceLogForm = ({
 
         {/* Actions */}
         <Stack direction="row" spacing={2} justifyContent="flex-end">
-          <Button variant="text" color="inherit" onClick={handleClear}>
-            Clear
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={() => void handleSubmit(onCreateDraft)()}
-          >
-            Create Draft
-          </Button>
+          {mode !== 'edit' && (
+            <Button variant="text" color="inherit" onClick={handleClear}>
+              Clear
+            </Button>
+          )}
+          {mode !== 'edit' && (
+            <Button
+              variant="outlined"
+              onClick={() => void handleSubmit(onCreateDraft)()}
+            >
+              Create Draft
+            </Button>
+          )}
+          {mode === 'edit' && (
+            <Button variant="text" color="inherit" onClick={onClose}>
+              Cancel
+            </Button>
+          )}
           <Button
             variant="contained"
             onClick={() => void handleSubmit(onSubmit)()}

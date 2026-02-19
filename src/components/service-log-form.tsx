@@ -53,7 +53,6 @@ export const ServiceLogForm = ({
     endDate: addOneDay(today),
     type: 'planned',
     serviceDescription: '',
-    ...initialValues,
   };
 
   const {
@@ -63,7 +62,7 @@ export const ServiceLogForm = ({
     reset,
     formState: { errors },
   } = useForm<DraftFormData>({
-    defaultValues,
+    defaultValues: { ...defaultValues, ...initialValues },
     resolver: yupResolver(serviceLogSchema),
   });
 

@@ -15,11 +15,8 @@ import { ServiceLogForm } from './components/service-log-form.tsx';
 import { ServiceLogsTable } from './components/service-logs-table.tsx';
 import { EditLogDialog } from './components/edit-log-dialog.tsx';
 import { useAppDispatch, useAppSelector } from './hooks/redux-hooks.ts';
-import {
-  clearAutoSave,
-  setAutoSave,
-} from './features/drafts/auto-save-slice.ts';
-import { addLog, updateLog, deleteLog } from './features/logs/logs-slice.ts';
+import { clearAutoSave, setAutoSave } from './features/auto-save-slice.ts';
+import { addLog, updateLog, deleteLog } from './features/logs-slice.ts';
 import type { DraftFormData, ServiceLog } from './types/service-log.ts';
 
 const App = () => {

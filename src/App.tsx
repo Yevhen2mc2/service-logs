@@ -12,7 +12,7 @@ import {
   Typography,
 } from '@mui/material';
 import { ServiceLogForm } from './components/service-log-form.tsx';
-import { ServiceLogsTable } from './components/service-logs-table.tsx';
+import { ServiceLogs } from './components/service-logs.tsx';
 import { EditLogDialog } from './components/edit-log-dialog.tsx';
 import { useAppDispatch, useAppSelector } from './hooks/redux-hooks.ts';
 import { clearAutoSave, setAutoSave } from './features/auto-save-slice.ts';
@@ -63,7 +63,7 @@ const App = () => {
         <Typography variant="h6" sx={{ mb: 1 }}>
           Drafts
         </Typography>
-        <ServiceLogsTable
+        <ServiceLogs
           logs={drafts}
           type="draft"
           onEdit={handleEdit}
@@ -74,7 +74,7 @@ const App = () => {
         <Typography variant="h6" sx={{ mt: 4, mb: 1 }}>
           Service Logs
         </Typography>
-        <ServiceLogsTable
+        <ServiceLogs
           logs={serviceLogs}
           type="log"
           onEdit={handleEdit}

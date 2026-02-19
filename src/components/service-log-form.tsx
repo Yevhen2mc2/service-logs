@@ -311,7 +311,12 @@ export const ServiceLogForm = ({
           {mode !== 'edit' && (
             <Button
               variant="outlined"
-              onClick={() => void handleSubmit(onCreateDraft)()}
+              onClick={() =>
+                void handleSubmit((data) => {
+                  onCreateDraft(data);
+                  handleClear();
+                })()
+              }
             >
               Create Draft
             </Button>
@@ -323,7 +328,12 @@ export const ServiceLogForm = ({
           )}
           <Button
             variant="contained"
-            onClick={() => void handleSubmit(onSubmit)()}
+            onClick={() =>
+              void handleSubmit((data) => {
+                onSubmit(data);
+                if (mode !== 'edit') handleClear();
+              })()
+            }
           >
             {mode === 'edit' ? 'Save' : 'Create'}
           </Button>

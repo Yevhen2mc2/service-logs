@@ -36,8 +36,12 @@ const logsSlice = createSlice({
     deleteLog: (state, action: PayloadAction<string>) => {
       state.logs = state.logs.filter((l) => l.id !== action.payload);
     },
+    removeAllDrafts: (state) => {
+      state.logs = state.logs.filter((l) => !l.draft);
+    },
   },
 });
 
-export const { addLog, updateLog, deleteLog } = logsSlice.actions;
+export const { addLog, updateLog, deleteLog, removeAllDrafts } =
+  logsSlice.actions;
 export const logsReducer = logsSlice.reducer;

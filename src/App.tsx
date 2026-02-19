@@ -6,8 +6,15 @@ import { useState } from 'react';
 import {
   AppBar,
   Box,
+  Button,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Paper,
+  Stack,
   Toolbar,
   Typography,
 } from '@mui/material';
@@ -16,7 +23,12 @@ import { ServiceLogs } from './components/service-logs.tsx';
 import { EditLogDialog } from './components/edit-log-dialog.tsx';
 import { useAppDispatch, useAppSelector } from './hooks/redux-hooks.ts';
 import { clearAutoSave, setAutoSave } from './features/auto-save-slice.ts';
-import { addLog, updateLog, deleteLog } from './features/logs-slice.ts';
+import {
+  addLog,
+  updateLog,
+  deleteLog,
+  removeAllDrafts,
+} from './features/logs-slice.ts';
 import type { DraftFormData, ServiceLog } from './types/service-log.ts';
 
 const App = () => {
@@ -27,6 +39,7 @@ const App = () => {
   const serviceLogs = logs.filter((l) => !l.draft);
 
   const [editingLog, setEditingLog] = useState<ServiceLog | null>(null);
+  const [removeAllDraftsOpen, setRemoveAllDraftsOpen] = useState(false);
 
   const handleEdit = (log: ServiceLog) => setEditingLog(log);
   const handleDelete = (id: string) => dispatch(deleteLog(id));
@@ -60,9 +73,24 @@ const App = () => {
           />
         </Paper>
 
-        <Typography variant="h6" sx={{ mb: 1 }}>
-          Drafts
-        </Typography>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent={'space-between'}
+          gap={2}
+          sx={{ mb: 2 }}
+        >
+          <Typography variant="h6">Drafts</Typography>
+          <Button
+            size="small"
+            color="error"
+            disabled={drafts.length === 0}
+            sx={{ ml: 2 }}
+            onClick={() => setRemoveAllDraftsOpen(true)}
+          >
+            Remove All Drafts
+          </Button>
+        </Stack>
         <ServiceLogs
           logs={drafts}
           type="draft"
@@ -88,6 +116,31 @@ const App = () => {
           onSave={handleSave}
         />
       </Container>
+
+      <Dialog
+        open={removeAllDraftsOpen}
+        onClose={() => setRemoveAllDraftsOpen(false)}
+      >
+        <DialogTitle>Remove All Drafts</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to remove all {drafts.length} draft
+            {drafts.length === 1 ? '' : 's'}? This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setRemoveAllDraftsOpen(false)}>Cancel</Button>
+          <Button
+            color="error"
+            onClick={() => {
+              dispatch(removeAllDrafts());
+              setRemoveAllDraftsOpen(false);
+            }}
+          >
+            Remove All
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

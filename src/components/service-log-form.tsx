@@ -95,6 +95,7 @@ export const ServiceLogForm = ({
       isResettingRef.current = false;
       return;
     }
+    if (mode === 'edit') return;
     const savingTimer = setTimeout(() => setAutoSaveStatus('saving'), 0);
     const savedTimer = setTimeout(() => {
       onAutoSave?.(watchedValues as DraftFormData);
@@ -104,7 +105,7 @@ export const ServiceLogForm = ({
       clearTimeout(savingTimer);
       clearTimeout(savedTimer);
     };
-  }, [watchedValues, onAutoSave]);
+  }, [watchedValues, onAutoSave, mode]);
 
   const handleClear = () => {
     isResettingRef.current = true;
@@ -119,10 +120,10 @@ export const ServiceLogForm = ({
         <Typography variant="h6">
           {mode === 'edit' ? 'Edit Service Log' : 'Service Log'}
         </Typography>
-        {autoSaveStatus === 'saved' && (
+        {mode !== 'edit' && autoSaveStatus === 'saved' && (
           <CheckCircleOutlineIcon color="success" fontSize="small" />
         )}
-        {autoSaveStatus !== 'idle' && (
+        {mode !== 'edit' && autoSaveStatus !== 'idle' && (
           <Typography
             variant="caption"
             color={

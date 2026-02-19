@@ -10,8 +10,8 @@ import {
   REGISTER,
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import { autoSaveReducer } from '../features/drafts/auto-save-slice.ts';
-import { logsReducer } from '../features/logs/logs-slice.ts';
+import { autoSaveReducer } from '../features/auto-save-slice.ts';
+import { logsReducer } from '../features/logs-slice.ts';
 
 const autoSavePersistConfig = {
   key: 'root',

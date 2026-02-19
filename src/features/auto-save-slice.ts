@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import type { DraftFormData } from '../../types/service-log.ts';
+import type { DraftFormData } from '../types/service-log.ts';
 
 interface AutoSaveState {
   autoSave: Partial<DraftFormData> | null;

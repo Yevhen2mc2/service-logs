@@ -16,6 +16,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
@@ -123,30 +124,36 @@ export const ServiceLogsTable = ({
                     </TableCell>
                     <TableCell>
                       <Box sx={{ display: 'flex', gap: 0.5 }}>
-                        <IconButton
-                          size="small"
-                          onClick={() => onEdit(log)}
-                          aria-label="edit"
-                        >
-                          <EditIcon fontSize="small" />
-                        </IconButton>
-                        <IconButton
-                          size="small"
-                          onClick={() => setPendingDeleteId(log.id)}
-                          aria-label="delete"
-                          sx={{ color: 'error.main' }}
-                        >
-                          <DeleteIcon fontSize="small" />
-                        </IconButton>
-                        {type === 'draft' && (
+                        <Tooltip title="Edit" placement="top">
                           <IconButton
                             size="small"
-                            onClick={() => onConfirm?.(log.id)}
-                            aria-label="confirm"
-                            sx={{ color: 'success.main' }}
+                            onClick={() => onEdit(log)}
+                            aria-label="edit"
                           >
-                            <CheckCircleOutlineIcon fontSize="small" />
+                            <EditIcon fontSize="small" />
                           </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Remove" placement="top">
+                          <IconButton
+                            size="small"
+                            onClick={() => setPendingDeleteId(log.id)}
+                            aria-label="delete"
+                            sx={{ color: 'error.main' }}
+                          >
+                            <DeleteIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                        {type === 'draft' && (
+                          <Tooltip title="Confirm" placement="top">
+                            <IconButton
+                              size="small"
+                              onClick={() => onConfirm?.(log.id)}
+                              aria-label="confirm"
+                              sx={{ color: 'success.main' }}
+                            >
+                              <CheckCircleOutlineIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
                         )}
                       </Box>
                     </TableCell>

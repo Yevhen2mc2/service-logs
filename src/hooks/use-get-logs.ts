@@ -1,7 +1,7 @@
 import { useAppSelector } from './redux-hooks.ts';
 
 export const useGetLogs = () => {
-  const autoSave = useAppSelector((state) => state.autoSave.autoSave);
+  const autoSave = useAppSelector((state) => state.app.autoSave);
   const logs = useAppSelector((state) => state.logs.logs);
 
   return {

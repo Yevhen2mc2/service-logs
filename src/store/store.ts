@@ -10,29 +10,24 @@ import {
   REGISTER,
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import { autoSaveReducer } from '../features/auto-save-slice.ts';
 import { logsReducer } from '../features/logs-slice.ts';
 import { appReducer } from '../features/app-slice.ts';
 
-const autoSavePersistConfig = {
-  key: 'root',
+const appPersistConfig = {
+  key: 'app',
   version: 1,
   storage,
-  whitelist: ['autoSave'],
+  blacklist: ['toast'],
 };
 
 const logsPersistConfig = { key: 'logs', version: 1, storage };
 
-const persistedAutoSaveReducer = persistReducer(
-  autoSavePersistConfig,
-  autoSaveReducer,
-);
+const persistedAppReducer = persistReducer(appPersistConfig, appReducer);
 const persistedLogsReducer = persistReducer(logsPersistConfig, logsReducer);
 
 export const store = configureStore({
   reducer: {
-    app: appReducer,
-    autoSave: persistedAutoSaveReducer,
+    app: persistedAppReducer,
     logs: persistedLogsReducer,
   },
   middleware: (getDefaultMiddleware) =>

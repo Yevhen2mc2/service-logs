@@ -1,5 +1,5 @@
 import { useAppDispatch } from './redux-hooks.ts';
-import { clearAutoSave, setAutoSave } from '../features/auto-save-slice.ts';
+import { clearAutoSave, setAutoSave } from '../features/app-slice.ts';
 import { addLog } from '../features/logs-slice.ts';
 import type { DraftFormData } from '../types/service-log.ts';
 import { useToast } from './use-toast.ts';

@@ -3,7 +3,9 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { useState } from 'react';
+import { useToast } from './hooks/use-toast.ts';
 import {
+  Alert,
   AppBar,
   Box,
   Button,
@@ -14,6 +16,7 @@ import {
   DialogContentText,
   DialogTitle,
   Paper,
+  Snackbar,
   Stack,
   Toolbar,
   Typography,
@@ -32,6 +35,8 @@ import {
 import type { DraftFormData, ServiceLog } from './types/service-log.ts';
 
 const App = () => {
+  const { toast, showToast, hideToast } = useToast();
+
   const dispatch = useAppDispatch();
   const autoSave = useAppSelector((state) => state.autoSave.autoSave);
   const logs = useAppSelector((state) => state.logs.logs);
@@ -42,15 +47,35 @@ const App = () => {
   const [removeAllDraftsOpen, setRemoveAllDraftsOpen] = useState(false);
 
   const handleEdit = (log: ServiceLog) => setEditingLog(log);
-  const handleDelete = (id: string) => dispatch(deleteLog(id));
+
+  const handleDelete = (id: string) => {
+    dispatch(deleteLog(id));
+    showToast('Service log deleted', 'warning');
+  };
+
   const handleConfirmDraft = (id: string) => {
     const log = logs.find((l) => l.id === id);
-    if (log) dispatch(updateLog({ ...log, draft: false }));
+    if (log) {
+      dispatch(updateLog({ ...log, draft: false }));
+      showToast('Draft confirmed');
+    }
   };
+
   const handleSave = (id: string, data: DraftFormData, draft: boolean) => {
     const existing = logs.find((l) => l.id === id);
     if (existing) dispatch(updateLog({ ...existing, ...data, draft }));
     setEditingLog(null);
+    showToast('Service log updated');
+  };
+
+  const handleCreateDraft = (data: DraftFormData) => {
+    dispatch(addLog({ ...data, draft: true }));
+    showToast('Draft created', 'info');
+  };
+
+  const handleSubmit = (data: DraftFormData) => {
+    dispatch(addLog({ ...data, draft: false }));
+    showToast('Service log created');
   };
 
   return (
@@ -68,8 +93,8 @@ const App = () => {
             initialValues={autoSave ?? undefined}
             onAutoSave={(data) => dispatch(setAutoSave(data))}
             onClear={() => dispatch(clearAutoSave())}
-            onCreateDraft={(data) => dispatch(addLog({ ...data, draft: true }))}
-            onSubmit={(data) => dispatch(addLog({ ...data, draft: false }))}
+            onCreateDraft={handleCreateDraft}
+            onSubmit={handleSubmit}
           />
         </Paper>
 
@@ -141,6 +166,17 @@ const App = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Snackbar
+        open={toast.open}
+        autoHideDuration={1500}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        onClose={hideToast}
+      >
+        <Alert severity={toast.severity} variant="filled">
+          {toast.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

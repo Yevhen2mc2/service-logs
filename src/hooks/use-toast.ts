@@ -1,22 +1,14 @@
-import { useState } from 'react';
-
-type ToastState = {
-  open: boolean;
-  message: string;
-  severity: 'success' | 'info' | 'warning' | 'error';
-};
+import { useAppDispatch } from './redux-hooks.ts';
+import { showToast } from '../features/app-slice.ts';
+import type { ToastState } from '../types/toast.ts';
 
 export const useToast = () => {
-  const [toast, setToast] = useState<ToastState>({
-    open: false,
-    message: '',
-    severity: 'success',
-  });
+  const dispatch = useAppDispatch();
 
-  const showToast = (message: string, severity?: ToastState['severity']) =>
-    setToast({ open: true, message, severity: severity ?? 'success' });
+  const toast = (
+    message: ToastState['message'],
+    severity?: ToastState['severity'],
+  ) => dispatch(showToast({ message, severity }));
 
-  const hideToast = () => setToast((prev) => ({ ...prev, open: false }));
-
-  return { toast, showToast, hideToast };
+  return { toast };
 };

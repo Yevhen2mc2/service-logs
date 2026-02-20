@@ -12,6 +12,7 @@ import {
 import storage from 'redux-persist/lib/storage';
 import { autoSaveReducer } from '../features/auto-save-slice.ts';
 import { logsReducer } from '../features/logs-slice.ts';
+import { appReducer } from '../features/app-slice.ts';
 
 const autoSavePersistConfig = {
   key: 'root',
@@ -30,6 +31,7 @@ const persistedLogsReducer = persistReducer(logsPersistConfig, logsReducer);
 
 export const store = configureStore({
   reducer: {
+    app: appReducer,
     autoSave: persistedAutoSaveReducer,
     logs: persistedLogsReducer,
   },

@@ -62,7 +62,7 @@ export const ServiceLogForm = ({
     handleSubmit,
     setValue,
     reset,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<DraftFormData>({
     defaultValues: { ...defaultValues, ...initialValues },
     resolver: yupResolver(serviceLogSchema),
@@ -70,7 +70,6 @@ export const ServiceLogForm = ({
 
   const [autoSaveStatus, setAutoSaveStatus] = useState<AutoSaveStatus>('idle');
   const startDateInitRef = useRef(false);
-  const autoSaveInitRef = useRef(false);
   const isResettingRef = useRef(false);
 
   const watchedStartDate = useWatch({ control, name: 'startDate' });
@@ -89,15 +88,12 @@ export const ServiceLogForm = ({
 
   // Auto-save with debounce
   useEffect(() => {
-    if (!autoSaveInitRef.current) {
-      autoSaveInitRef.current = true;
-      return;
-    }
     if (isResettingRef.current) {
       isResettingRef.current = false;
       return;
     }
     if (mode === 'edit') return;
+    if (!isDirty) return;
     const savingTimer = setTimeout(() => setAutoSaveStatus('saving'), 0);
     const savedTimer = setTimeout(() => {
       onAutoSave?.(watchedValues as DraftFormData);
@@ -107,7 +103,7 @@ export const ServiceLogForm = ({
       clearTimeout(savingTimer);
       clearTimeout(savedTimer);
     };
-  }, [watchedValues, onAutoSave, mode]);
+  }, [watchedValues, onAutoSave, mode, isDirty]);
 
   const handleClear = () => {
     isResettingRef.current = true;
@@ -118,23 +114,33 @@ export const ServiceLogForm = ({
 
   return (
     <Box component="form" noValidate>
-      <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 3 }}>
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent={'space-between'}
+        spacing={1}
+        sx={{ mb: 3 }}
+      >
         <Typography variant="h6">
           {mode === 'edit' ? 'Edit Service Log' : 'Service Log'}
         </Typography>
-        {mode !== 'edit' && autoSaveStatus === 'saved' && (
-          <CheckCircleOutlineIcon color="success" fontSize="small" />
-        )}
-        {mode !== 'edit' && autoSaveStatus !== 'idle' && (
-          <Typography
-            variant="caption"
-            color={
-              autoSaveStatus === 'saving' ? 'text.secondary' : 'success.main'
-            }
-          >
-            {autoSaveStatus === 'saving' ? 'Saving...' : 'Draft saved'}
-          </Typography>
-        )}
+
+        <Stack direction={'row'} gap={1} alignItems="center">
+          {mode !== 'edit' && autoSaveStatus !== 'idle' && (
+            <Typography
+              variant="caption"
+              color={
+                autoSaveStatus === 'saving' ? 'text.secondary' : 'success.main'
+              }
+            >
+              {autoSaveStatus === 'saving' ? 'Saving...' : 'Draft saved'}
+            </Typography>
+          )}
+
+          {mode !== 'edit' && autoSaveStatus === 'saved' && (
+            <CheckCircleOutlineIcon color="success" fontSize="small" />
+          )}
+        </Stack>
       </Stack>
 
       <Stack spacing={2}>

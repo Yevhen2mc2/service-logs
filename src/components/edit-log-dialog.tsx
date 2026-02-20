@@ -16,7 +16,9 @@ export const EditLogDialog = ({ log, open, onClose, onSave }: Props) => {
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>Edit Service Log</DialogTitle>
+      <DialogTitle>
+        {log.draft ? 'Edit Service Log Draft' : 'Edit Service Log'}
+      </DialogTitle>
       <DialogContent dividers>
         <ServiceLogForm
           mode="edit"

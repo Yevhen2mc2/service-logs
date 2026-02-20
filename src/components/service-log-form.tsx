@@ -122,10 +122,6 @@ export const ServiceLogForm = ({
         spacing={1}
         sx={{ mb: 3 }}
       >
-        <Typography variant="h6">
-          {mode === 'edit' ? 'Edit Service Log' : 'Create Service Log'}
-        </Typography>
-
         <Stack direction={'row'} gap={1} alignItems="center">
           {mode !== 'edit' && autoSaveStatus !== 'idle' && (
             <Typography

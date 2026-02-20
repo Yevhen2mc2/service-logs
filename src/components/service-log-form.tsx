@@ -19,19 +19,19 @@ import type { DraftFormData } from '../types/service-log.ts';
 import { serviceLogSchema } from '../schemes/service-log.ts';
 import { serviceTypes } from '../constants/service-types.ts';
 
-const addOneDay = (dateStr: string): string =>
+const addOneDay = (dateStr: string) =>
   dayjs(dateStr).add(1, 'day').format('YYYY-MM-DD');
 
 type AutoSaveStatus = 'idle' | 'saving' | 'saved';
 
 interface Props {
-  mode?: 'create' | 'edit';
-  initialValues?: Partial<DraftFormData>;
-  onCreateDraft: (data: DraftFormData) => void;
-  onSubmit: (data: DraftFormData) => void;
   onClear: () => void;
-  onAutoSave?: (data: Partial<DraftFormData>) => void;
+  onSubmit: (data: DraftFormData) => void;
+  onCreateDraft: (data: DraftFormData) => void;
+  mode?: 'create' | 'edit';
   onClose?: () => void;
+  onAutoSave?: (data: Partial<DraftFormData>) => void;
+  initialValues?: Partial<DraftFormData>;
 }
 
 export const ServiceLogForm = ({
@@ -92,11 +92,12 @@ export const ServiceLogForm = ({
       isResettingRef.current = false;
       return;
     }
-    if (mode === 'edit') return;
-    if (!isDirty) return;
+
+    if (!onAutoSave || mode === 'edit' || !isDirty) return;
+
     const savingTimer = setTimeout(() => setAutoSaveStatus('saving'), 0);
     const savedTimer = setTimeout(() => {
-      onAutoSave?.(watchedValues as DraftFormData);
+      onAutoSave(watchedValues);
       setAutoSaveStatus('saved');
     }, 800);
     return () => {
@@ -244,9 +245,7 @@ export const ServiceLogForm = ({
                   ))}
                 </Select>
                 {errors.type && (
-                  <FormHelperText>
-                    {errors.type.message as string}
-                  </FormHelperText>
+                  <FormHelperText>{errors.type.message}</FormHelperText>
                 )}
               </FormControl>
             )}

@@ -34,6 +34,8 @@ export const LogsPage = () => {
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Paper sx={{ p: 3, mb: 4 }}>
+        <Typography variant={'h6'}>Create Service Log</Typography>
+
         <ServiceLogForm
           initialValues={autoSave ?? undefined}
           onAutoSave={handleAutoSave}
